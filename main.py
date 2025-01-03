@@ -47,7 +47,7 @@ async def fetch_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 # Copy the message
                 await bot.copy_message(chat_id=target_channel_id, from_chat_id=source_channel_id, message_id=msg_id)
                 # Wait for 2 seconds
-                await asyncio.sleep(2)
+                await asyncio.sleep(5)
             except Exception as e:
                 logger.error(f"Error copying message {msg_id}: {e}")
                 continue
