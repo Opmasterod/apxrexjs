@@ -2,6 +2,7 @@ import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ConversationHandler, ContextTypes
 import logging
+import os
 
 # Enable logging
 logging.basicConfig(
@@ -14,7 +15,8 @@ logger = logging.getLogger(__name__)
 START, FETCH_MESSAGES = range(2)
 
 # Bot token
-BOT_TOKEN = '7831835699:AAHR1aMvD6yvB9pmR5RbCRShwb3ax5-yR1Y'
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "8127063024:AAH1Cs8atxlAlbRlpunJUJSn4LVLG6FBxzI")
+WAIT = os.environ.get("WAIT", "3")
 
 # Start command handler
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -47,7 +49,7 @@ async def fetch_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 # Copy the message
                 await bot.copy_message(chat_id=target_channel_id, from_chat_id=source_channel_id, message_id=msg_id)
                 # Wait for 2 seconds
-                await asyncio.sleep(8)
+                await asyncio.sleep(WAIT)
             except Exception as e:
                 logger.error(f"Error copying message {msg_id}: {e}")
                 continue
