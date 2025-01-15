@@ -77,7 +77,7 @@ async def process_batch(start, end, mobile_number, context, chat_id, progress_me
     return None
 
 def main():
-    application = ApplicationBuilder().token("7489407688:AAGbVyKvGqpp5fllkxWWU2tWR3dw3SrGI6c").build()
+    application = ApplicationBuilder().token("6223059105:AAGxg6pEcGEtoIJI0o1docidhwUnlg2-uVo").build()
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_mobile_number))
