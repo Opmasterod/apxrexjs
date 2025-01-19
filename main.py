@@ -1,5 +1,5 @@
 import requests
-from telegram import InputFile
+from telegram import Update, InputFile
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
 # Your bot token from BotFather
