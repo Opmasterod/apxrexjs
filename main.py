@@ -1,7 +1,7 @@
 import os
 import logging
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 import requests
 
 # Your bot token from BotFather
@@ -14,11 +14,11 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 # Handler for '/start' command
-def start(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('Welcome! Send me a link from a channel where I am admin.')
+async def start(update: Update, context: CallbackContext) -> None:
+    await update.message.reply_text('Welcome! Send me a link from a channel where I am admin.')
 
 # Handler for incoming message links
-def handle_message(update: Update, context: CallbackContext) -> None:
+async def handle_message(update: Update, context: CallbackContext) -> None:
     # Extract the link from the message
     message_text = update.message.text
     if 'https://t.me/c/' in message_text:
@@ -32,16 +32,16 @@ def handle_message(update: Update, context: CallbackContext) -> None:
             download_url = f'{KoyebServerURL}{message_id}'
 
             # Respond with the download link
-            update.message.reply_text(f"Download link for your content: {download_url}")
+            await update.message.reply_text(f"Download link for your content: {download_url}")
 
             # Save the file ID and generate a fake download link (This is a placeholder logic)
             save_to_server(message_id)
 
         except Exception as e:
-            update.message.reply_text("Error processing the message. Please ensure it's a valid message link.")
+            await update.message.reply_text("Error processing the message. Please ensure it's a valid message link.")
             logger.error(f"Error: {e}")
     else:
-        update.message.reply_text("Please send a valid Telegram message link.")
+        await update.message.reply_text("Please send a valid Telegram message link.")
 
 # Save file ID and generate the download link on Koyeb server
 def save_to_server(message_id):
@@ -56,18 +56,15 @@ def save_to_server(message_id):
 
 # Main function to set up the bot
 def main():
-    updater = Updater(BOT_TOKEN, use_context=True)
-
-    # Get the dispatcher to register handlers
-    dp = updater.dispatcher
+    # Create the Application instance instead of Updater
+    application = Application.builder().token(BOT_TOKEN).build()
 
     # Register handlers
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     # Start the Bot
-    updater.start_polling()
-    updater.idle()
+    application.run_polling()
 
 if __name__ == '__main__':
     main()
