@@ -1,7 +1,7 @@
 import os
 import logging
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
 import requests
 
 # Your bot token from BotFather
@@ -47,7 +47,6 @@ def handle_message(update: Update, context: CallbackContext) -> None:
 def save_to_server(message_id):
     # This is a placeholder function. You'd need to implement the actual file saving logic
     # and store the file (video, image, or document) on your server.
-    # Example: Download the file from Telegram using the file_id and upload it to your server.
     
     # In this example, we just log the message ID and pretend to upload it
     logger.info(f"Saving content with message_id: {message_id} on the Koyeb server.")
@@ -64,7 +63,7 @@ def main():
 
     # Register handlers
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
+    dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     # Start the Bot
     updater.start_polling()
