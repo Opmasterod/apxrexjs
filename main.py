@@ -1,6 +1,6 @@
 import requests
 from telegram import Update, InputFile
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import Application, MessageHandler, filters, CallbackContext
 
 # Your bot token from BotFather
 BOT_TOKEN = '7689660542:AAGzyhpRqkCKmV7eJVnvy-IjPBlxKKkmf3E'
@@ -11,6 +11,7 @@ async def handle_message(update: Update, context: CallbackContext) -> None:
     message_text = update.message.text
     if 'https://t.me/c/' in message_text:
         try:
+            # Split the message to extract channel_id and message_id
             parts = message_text.split('/')
             channel_id = parts[3]
             message_id = parts[4]
@@ -29,13 +30,14 @@ async def handle_message(update: Update, context: CallbackContext) -> None:
             else:
                 await update.message.reply_text("Failed to fetch media from Telegram.")
         except Exception as e:
-            await update.message.reply_text(f"Error processing the message. {e}")
+            await update.message.reply_text(f"Error processing the message: {e}")
 
 # Function to get media URL from the Telegram API
 async def get_media_url(channel_id, message_id, context):
     try:
         # Fetch the message details (including media)
-        message = await context.bot.get_chat(channel_id).get_message(message_id)
+        chat = await context.bot.get_chat(channel_id)  # Get the chat asynchronously
+        message = await chat.get_message(message_id)  # Get the message asynchronously
         
         # Check the message type and get the appropriate media URL
         if message.video:
